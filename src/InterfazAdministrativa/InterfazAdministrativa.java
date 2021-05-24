@@ -24,7 +24,7 @@ public class InterfazAdministrativa extends javax.swing.JFrame {
     public InterfazAdministrativa() {
        
         initComponents();
-        //botonDepositar.setEnabled(false);
+        
     }
     
     
