@@ -30,6 +30,7 @@ public class Interfaz extends javax.swing.JFrame {
     double respuesta;
     Integer validacion;
     Integer validacion2;
+    Integer validacion3;
     
     
    /*  public static final String url="jdbc:mysql://localhost:3306/bdbaniscutp";
@@ -806,10 +807,11 @@ public class Interfaz extends javax.swing.JFrame {
                     nuevaCantidad = Double.parseDouble(String.valueOf(textoCantidad.getText()));
                     cajeroCantidad = cajero.totalCajero(Integer.parseInt(textoContador.getText()));
                     
-                    if(nuevaCantidad>2000){
+                    if(nuevaCantidad>=2000){
                         
                         if(nuevaCantidad>cajeroCantidad){
-                        JOptionPane.showMessageDialog(null, "El cajero no tiene este monto. ");
+                            textoOpcion.setText("El cajero no tiene este monto. ");
+                        //JOptionPane.showMessageDialog(null, "El cajero no tiene este monto. ");
                         }
                         else{
                             
@@ -818,19 +820,32 @@ public class Interfaz extends javax.swing.JFrame {
                         
                             validacion=cajero.validarBilletes(Integer.parseInt(textoContador.getText()), nuevaCantidad);
                             if(validacion == 1){
+                            textoOpcion.setText(cajero.validarBilletes2(Integer.parseInt(textoContador.getText()), nuevaCantidad));
+                            //textoOpcion.setText(cajero.retirar(nuevaCantidad, codigoBd, contraseñaBd)); 
                             cajero.retirar(nuevaCantidad, codigoBd,contraseñaBd);
+                            
                         }
                         else{
-                            JOptionPane.showMessageDialog(null, "No se pudo retirar por falta de billetes. ");
+                            textoOpcion.setText("No se pudo retirar por falta de billetes. ");
+                            //JOptionPane.showMessageDialog(null, "No se pudo retirar por falta de billetes. ");
                         }
                        }
+                        else{
+                            if(validacion2==2){
+                                textoOpcion.setText("Saldo insuficiente, consulte su saldo. ");
+                            }
+                            if(validacion2==3){
+                                 textoOpcion.setText("No se pudo realizar esta operacion porque su usuario u contraseña es incorrecta. ");
+                            }
+                        }
                         
                         
                         
                         }
                     }
                     else{
-                        JOptionPane.showMessageDialog(null, "El cajero solo puede retirar un monto mayor a 2000. ");
+                        textoOpcion.setText("El cajero solo puede retirar un monto mayor a 2000. ");
+                        //JOptionPane.showMessageDialog(null, "El cajero solo puede retirar un monto mayor a 2000. ");
                     }
                   
                     
@@ -892,7 +907,8 @@ public class Interfaz extends javax.swing.JFrame {
                             botonIngresar.setEnabled(true);
                         }
                         else{
-                            JOptionPane.showMessageDialog(null, "Su nuevo saldo es de: "+respuesta);
+                            //textoOpcion.setText("Su nuevo saldo es de : " + respuesta);
+                            //JOptionPane.showMessageDialog(null, "Su nuevo saldo es de: "+respuesta);
                             textoCodigo.setText(" ");
 
                             panelOpcion.setVisible(true);
@@ -1061,7 +1077,8 @@ public class Interfaz extends javax.swing.JFrame {
             textoCodigo.setText(" ");
         }
         else{
-            JOptionPane.showMessageDialog(null, "Su saldo es de: "+respuesta);
+            textoOpcion.setText("Su saldo es de : "+ respuesta);
+            //JOptionPane.showMessageDialog(null, "Su saldo es de: "+respuesta);
             botonConsultarSaldo.setEnabled(false);
             botonIngresar.setEnabled(true);
             botonDepositar.setEnabled(false);

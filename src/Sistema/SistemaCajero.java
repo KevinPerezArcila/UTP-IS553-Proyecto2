@@ -6,6 +6,7 @@
 package Sistema;
 
 import Conexion.Conexion;
+import Interfaz.Interfaz;
 import com.mysql.jdbc.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +26,8 @@ public class SistemaCajero {
         
         PreparedStatement ps ;
         ResultSet rs;
-        
+       
+       
         
         public  static Connection getConnection(){
         Connection con = null;
@@ -218,10 +220,10 @@ public class SistemaCajero {
                
                if(suma==retiro){
                    
-                   total=(totalBillete50*50000)+(totalBillete20*20000)+(totalBillete10*10000)+(totalBillete5*5000)+(totalBillete2*2000);
-                   actualizarMontoCajero( totalBillete50,totalBillete20,totalBillete10,totalBillete5,totalBillete2,total,id);
+                   //total=(totalBillete50*50000)+(totalBillete20*20000)+(totalBillete10*10000)+(totalBillete5*5000)+(totalBillete2*2000);
+                   //actualizarMontoCajero( totalBillete50,totalBillete20,totalBillete10,totalBillete5,totalBillete2,total,id);
                    
-                   JOptionPane.showMessageDialog(null, "Se entregaron "+totalBillete50Aux+" de 50mil, "+totalBillete20Aux+" de 20mil, "+totalBillete10Aux+" de 10 mil, "+totalBillete5Aux+" de 5mil y "+totalBillete2Aux+" de 2mil. ");
+                   //JOptionPane.showMessageDialog(null, "Se entregaron "+totalBillete50Aux+" de 50mil, "+totalBillete20Aux+" de 20mil, "+totalBillete10Aux+" de 10 mil, "+totalBillete5Aux+" de 5mil y "+totalBillete2Aux+" de 2mil. ");
                    return 1;
                
                }
@@ -243,6 +245,166 @@ public class SistemaCajero {
         }
 
     return 0;
+    }
+    
+    public String validarBilletes2(Integer id, double retiro){
+        Connection con = null;
+        Integer totalBillete50;
+        Integer totalBillete20;
+        Integer totalBillete10;
+        Integer totalBillete5;
+        Integer totalBillete2;
+        Integer totalBillete50Aux;
+        Integer totalBillete20Aux;
+        Integer totalBillete10Aux;
+        Integer totalBillete5Aux;
+        Integer totalBillete2Aux;
+        Integer total;
+        Integer suma=0;
+        Integer billete=0;
+        double contador;
+        double contadorAux;
+        
+        try{
+            con = getConnection();
+            Statement st=con.createStatement();
+            
+            String validacion = "SELECT * FROM registrocajero WHERE id='"+id+"'";
+            rs = st.executeQuery(validacion);
+            if(rs.next()){
+                totalBillete50=rs.getInt("billete50");
+                
+                totalBillete20=rs.getInt("billete20");
+                
+                totalBillete10=rs.getInt("billete10");
+               
+                totalBillete5=rs.getInt("billete5");
+                
+                totalBillete2=rs.getInt("billete2");
+                
+                total =rs.getInt("total");
+                
+                
+                contador=retiro;
+                for(int i = 0; i<totalBillete50; i++ ){
+                    if(suma<retiro){
+                        if(contador>=50000){
+                            suma+=50000;
+                            billete = i+1;
+                            contador=contador-50000;
+                        }
+                        
+                    }
+                    
+                }
+                totalBillete50Aux=billete;
+                totalBillete50=totalBillete50-billete;
+                billete=0;
+                for(int i = 0; i<totalBillete20; i++ ){
+                    if(suma<retiro){
+                        if(contador>=20000){
+                            suma+=20000;
+                            billete = i+1;
+                            contador=contador-20000;
+                        }
+                        
+                    }
+                    
+                }
+                totalBillete20Aux=billete;
+               totalBillete20=totalBillete20-billete;
+               billete=0;
+               for(int i = 0; i<totalBillete10; i++ ){
+                    if(suma<retiro){
+                        if(contador>=10000){
+                        
+                            suma+=10000;
+                            billete = i+1;
+                            contador=contador-10000;
+                        }
+                        
+                    }
+                    
+                }
+               totalBillete10Aux=billete;
+               totalBillete10=totalBillete10-billete;
+               billete=0;
+               
+               for(int i = 0; i<totalBillete5; i++ ){
+                    if(suma<retiro){
+                        
+                        if(contador>=5000){
+                            
+                            if(contador<10000){
+                                 contadorAux=contador-5000;
+                                if((contadorAux%2000)==0){
+                                 suma+=5000;
+                                 billete = i+1;
+                                 contador=contador-5000;
+                            }
+                                
+                            }
+                            else{
+                                suma+=5000;
+                                billete=i+1;
+                                contador=contador-5000;
+                            }
+                           
+                            
+               
+                        }
+                      
+                        
+                    }
+                    
+                }
+               totalBillete5Aux=billete;
+               totalBillete5=totalBillete5-billete;
+               billete=0;
+               for(int i = 0; i<totalBillete2; i++ ){
+                     
+                    if(suma<retiro){
+                        if(contador>=2000){
+                            suma+=2000;
+                            billete = i+1;
+                            contador=contador-2000;
+                        }
+                        
+                        
+                    }
+                    
+                }
+               totalBillete2Aux=billete;
+               totalBillete2=totalBillete2-billete;
+               billete=0;
+               
+               if(suma==retiro){
+                   
+                   total=(totalBillete50*50000)+(totalBillete20*20000)+(totalBillete10*10000)+(totalBillete5*5000)+(totalBillete2*2000);
+                   actualizarMontoCajero( totalBillete50,totalBillete20,totalBillete10,totalBillete5,totalBillete2,total,id);
+                   
+                   return "Se entregaron "+totalBillete50Aux+" de 50mil, "+totalBillete20Aux+" de 20mil, "+totalBillete10Aux+" de 10 mil, "+totalBillete5Aux+" de 5mil y "+totalBillete2Aux+" de 2mil. ";
+                   
+               
+               }
+                
+               else{
+                   
+                   
+               }
+               
+               
+               
+            }
+            
+            else{
+                
+            }
+        }catch(Exception e){
+            
+        }
+
+    return "a";
     }
     
     public void actualizarMontoCajero(Integer totalBillete50,Integer totalBillete20, Integer totalBillete10,Integer totalBillete5,Integer totalBillete2,Integer total,Integer id){
@@ -312,7 +474,7 @@ public class SistemaCajero {
         return total;
     }
     
-    public void retirar (double retiro, String codigoBd, String contraseñaBd ){
+    public String retirar (double retiro, String codigoBd, String contraseñaBd ){
         Connection con=null;
         try{
             con = getConnection();
@@ -326,25 +488,33 @@ public class SistemaCajero {
                     if(saldoActual>=retiro ){
                     saldoActual-=retiro;
                     actualizarDatos(saldoActual, codigoBd);
-                    
-                    JOptionPane.showMessageDialog(null, "Retiro del dinero exitoso. ");
+                    return "Retiro del dinero exitoso";
+                
+                    //JOptionPane.showMessageDialog(null, "Retiro del dinero exitoso. ");
                  }
                     
         else{
-            JOptionPane.showMessageDialog(null, "Saldo insuficiente, consulte su saldo. ");
+            
+           // JOptionPane.showMessageDialog(null, "Saldo insuficiente, consulte su saldo. ");
             saldoActual = -1;
+           return "Saldo insuficiente, consulte su saldo.";
+            
         }
                     
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "No se pudo realizar esta operacion porque su usuario u contraseña es incorrecta. ");
+                    
+                    //JOptionPane.showMessageDialog(null, "No se pudo realizar esta operacion porque su usuario u contraseña es incorrecta. ");
                     saldoActual=0;
+                    return "No se pudo realizar esta operacion porque su usuario u contraseña es incorrecta. ";
+                  
+                    
                 }
             
         }catch(Exception e){
             
         }
-        
+        return "a";
     }
     
     public Integer validarCuenta (double retiro, String codigoBd, String contraseñaBd ){
@@ -368,14 +538,14 @@ public class SistemaCajero {
                  }
                     
         else{
-            JOptionPane.showMessageDialog(null, "Saldo insuficiente, consulte su saldo. ");
-            confirmacion=0;
+            //JOptionPane.showMessageDialog(null, "Saldo insuficiente, consulte su saldo. ");
+            confirmacion=2;
         }
                     
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, "No se pudo realizar esta operacion porque su usuario u contraseña es incorrecta. ");
-                    confirmacion=0;
+                    //JOptionPane.showMessageDialog(null, "No se pudo realizar esta operacion porque su usuario u contraseña es incorrecta. ");
+                    confirmacion=3;
                 }
             
         }catch(Exception e){
